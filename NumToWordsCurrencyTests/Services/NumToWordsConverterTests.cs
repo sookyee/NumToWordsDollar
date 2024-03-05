@@ -174,5 +174,20 @@ namespace NumToWordsCurrency.Services.Tests
                 Form resultForm = converter.ConvertNumToWords(form);
             });
         }
+        [TestMethod()]
+        public void MoreThanTwoDecimalSectionTest()
+        {
+            // Arrange
+            var loggerMock = new Mock<ILogger<NumToWordsConverter>>();
+            Form form = new Form { Input = "123.45.29" };
+            NumToWordsConverter converter = new NumToWordsConverter(loggerMock.Object);
+
+            // Act & Assert
+            Assert.ThrowsException<System.FormatException>(() =>
+            {
+                // Call the method that is expected to throw the exception
+                Form resultForm = converter.ConvertNumToWords(form);
+            });
+        }
     }
 }

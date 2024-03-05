@@ -13,7 +13,5 @@ namespace NumToWordsCurrency.Models
         public string Input { get; set; }
 
         public string Output { get; set; }
-
-        public string ErrorMessage { get; set; }
     }
 }

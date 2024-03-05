@@ -44,7 +44,7 @@ namespace NumToWordsCurrency.Controllers
                     return View("Index", formInput);
                 }
             }
-            ModelState.AddModelError("InvalidInput", "No input submitted");
+           
             return View("Index", formInput);
         }
 

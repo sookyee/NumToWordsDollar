@@ -26,7 +26,7 @@ namespace NumToWordsCurrency.Services
         private void IsValidInput (string input)
         {
             const decimal dollarLimit = 999999999.99m;
-            const int centsLimit = 99;
+            const int centsLimit = 99; 
 
             if (decimal.TryParse(input, out decimal amount))
             {
@@ -38,13 +38,17 @@ namespace NumToWordsCurrency.Services
                 {
                     throw new FormatException(string.Format("Input exceed maximum allowed value {0}", dollarLimit));
                 }
-                else if (decimal.Round(amount, 2) != amount)
+                var dollarCents = input.Split('.');
+                try
                 {
-                    throw new FormatException("Input is not in the correct format");
-                }
-                else if(((long)(amount*100)) %100> centsLimit) //multiply by 100 and get modulo remainder if greater than 99
+                    var cents = dollarCents[1];
+                    if (int.Parse(cents) > centsLimit)
+                    {
+                        throw new FormatException("Input is not in the correct format");
+                    }
+                } catch (IndexOutOfRangeException)
                 {
-                    throw new FormatException(string.Format("Input cents is more than {0}", centsLimit));
+                    return;
                 }
             } 
             else
