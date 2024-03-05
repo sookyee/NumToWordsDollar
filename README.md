@@ -9,6 +9,6 @@ Step 3: Open NumToWordsCurrency.sln\
 Step 4: Run dotnet restore or Select "Restore NuGet Packages" from solution explorer\
 Step 5: Build the solution by selecting "Build > Build Solution" from the Visual Studio menu, or by pressing Ctrl + Shift + B.\
 Step 6: Right-click on the desired project in the Solution Explorer.Select "Set as Startup Project" and Select NumToWordsCurrency.\
-Step 7: Pres F5 to run.\
+Step 7: Pres F5 to run.
 
 Step 8: Run test by navigating to Test>Run All
