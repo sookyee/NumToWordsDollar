@@ -38,7 +38,7 @@ namespace NumToWordsCurrency.Services
                 {
                     throw new FormatException(string.Format("Input exceed maximum allowed value {0}", dollarLimit));
                 }
-                var dollarCents = input.Split('.');
+                var dollarCents = input.Split('.'); 
                 try
                 {
                     var cents = dollarCents[1];
@@ -46,7 +46,7 @@ namespace NumToWordsCurrency.Services
                     {
                         throw new FormatException("Input is not in the correct format");
                     }
-                } catch (IndexOutOfRangeException)
+                } catch (IndexOutOfRangeException) // . is not specified (assume 0)
                 {
                     return;
                 }
@@ -61,7 +61,7 @@ namespace NumToWordsCurrency.Services
         {
             if (DPLessThanThousand.ContainsKey(input))
             {
-                return DPLessThanThousand[input];
+                return DPLessThanThousand[input]; //store results of recursion
             }
             string result;
             if (input == 0)
@@ -78,7 +78,7 @@ namespace NumToWordsCurrency.Services
             }
             else
             {
-                if (input % 100 > 0)
+                if (input % 100 > 0) //has remainder
                 {
                     result = Ones[input / 100] + " HUNDRED AND " + ConvertLessThanThousand(input % 100);
                 }
@@ -100,7 +100,7 @@ namespace NumToWordsCurrency.Services
                 }
                 string result = "";
                 int groupIndex = 0;
-                while (inputDec > 0 && groupIndex < Groups.Length)
+                while (inputDec > 0 && groupIndex < Groups.Length) //group index from ones to millions
                 {
                     long currentGroup = (long)(inputDec % 1000);
                     if (currentGroup != 0)
@@ -127,15 +127,11 @@ namespace NumToWordsCurrency.Services
 
             string[] dollarsCents = input.Split('.');
             int cents;
-            try
+            if (dollarsCents.Length > 1)
             {
                 cents = int.Parse(dollarsCents[1]);
-
-            } catch (IndexOutOfRangeException)
-            {
-                cents = 0;
             }
-            catch(FormatException)
+            else
             {
                 cents = 0;
             }
