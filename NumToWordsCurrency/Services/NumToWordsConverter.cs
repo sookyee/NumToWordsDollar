@@ -10,35 +10,36 @@ namespace NumToWordsCurrency.Services
 {
     public class NumToWordsConverter : INumToWords
     {
-        private static readonly string[] Ones = {"", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN",
-                                             "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"};
-        private static readonly string[] Tens = { "", "", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY" };
+        private static readonly string[] Ones = {"", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                                             "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"};
+
+        private static readonly string[] Tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
 
         private static readonly Dictionary<long, string> DPLessThanThousand = new Dictionary<long, string>();
 
-        private static readonly string[] Groups = { "", "THOUSAND", "MILLION" };
+        private static readonly string[] Groups = { "", "Thousand", "Million" };
         private readonly ILogger<NumToWordsConverter> _logger;
 
         public NumToWordsConverter(ILogger<NumToWordsConverter> logger)
         {
             _logger = logger;
         }
-        private void IsValidInput (string input)
+        private void IsValidInput(string input)
         {
             const decimal dollarLimit = 999999999.99m;
-            const int centsLimit = 99; 
+            const int centsLimit = 99;
 
             if (decimal.TryParse(input, out decimal amount))
             {
-                if (amount< 0)
+                if (amount < 0)
                 {
-                        throw new FormatException("Input cannot be negative");
+                    throw new FormatException("Input cannot be negative");
                 }
                 else if (amount > dollarLimit)
                 {
                     throw new FormatException(string.Format("Input exceed maximum allowed value {0}", dollarLimit));
                 }
-                var dollarCents = input.Split('.'); 
+                var dollarCents = input.Split('.');
                 try
                 {
                     var cents = dollarCents[1];
@@ -50,7 +51,7 @@ namespace NumToWordsCurrency.Services
                 {
                     return;
                 }
-            } 
+            }
             else
             {
                 throw new FormatException("Input is not a valid number");
@@ -68,11 +69,11 @@ namespace NumToWordsCurrency.Services
             {
                 result = "";
             }
-            else if (input <20)
+            else if (input < 20)
             {
                 result = Ones[input];
-            } 
-            else if (input <100)
+            }
+            else if (input < 100)
             {
                 result = Tens[input / 10] + "-" + Ones[input % 10];
             }
@@ -80,11 +81,11 @@ namespace NumToWordsCurrency.Services
             {
                 if (input % 100 > 0) //has remainder
                 {
-                    result = Ones[input / 100] + " HUNDRED AND " + ConvertLessThanThousand(input % 100);
+                    result = Ones[input / 100] + " Hundred and " + ConvertLessThanThousand(input % 100);
                 }
                 else
                 {
-                    result = Ones[input / 100] + " HUNDRED";
+                    result = Ones[input / 100] + " Hundred";
                 }
             }
             DPLessThanThousand[input] = result;
@@ -96,7 +97,7 @@ namespace NumToWordsCurrency.Services
             {
                 if (inputDec == 0)
                 {
-                    return "ZERO";
+                    return "Zero";
                 }
                 string result = "";
                 int groupIndex = 0;
@@ -114,11 +115,19 @@ namespace NumToWordsCurrency.Services
                 }
                 return result.Trim();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogError(e, string.Format("An error occurred: {0}", e.Message));
                 throw new Exception("An unknown error occured");
             }
+        }
+        private string CheckIfOnes(string input, string finalWord) //check if shd be dollar(s)/cent(s)
+        {
+            if(input == Ones[1])
+            {
+                return finalWord;
+            }
+            return finalWord + "s";
         }
         public Form ConvertNumToWords(Form form)
         {
@@ -137,9 +146,11 @@ namespace NumToWordsCurrency.Services
             }
             var dollars = long.Parse(dollarsCents[0]);
             var dollarsWord = ConvertToString(dollars);
-            var centsWord = cents != 0 ? ConvertLessThanThousand(cents) : "ZERO";
-            string result = $"{dollarsWord} DOLLARS AND {centsWord} CENTS";
-            form.Output = result;
+            var centsWord = cents != 0 ? ConvertLessThanThousand(cents) : "Zero";
+            string dollarsWordFinal = dollarsWord +  " " + CheckIfOnes(dollarsWord, "Dollar");
+            string centsWordFinal = centsWord + " " + CheckIfOnes(centsWord, "Cent");
+            
+            form.Output = $"{dollarsWordFinal} and {centsWordFinal}";
             return form;
         }
     }

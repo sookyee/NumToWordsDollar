@@ -24,7 +24,7 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("ONE HUNDRED AND TWENTY-THREE DOLLARS AND FORTY-FIVE CENTS", resultForm.Output);
+            Assert.AreEqual("One Hundred and Twenty-Three Dollars and Forty-Five Cents", resultForm.Output);
         }
         [TestMethod()]
         public void PositiveNumZeroCentsTest()
@@ -38,7 +38,7 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("ONE HUNDRED AND TWENTY-THREE DOLLARS AND ZERO CENTS", resultForm.Output);
+            Assert.AreEqual("One Hundred and Twenty-Three Dollars and Zero Cents", resultForm.Output);
         }
         [TestMethod()]
         public void PositiveNumZeroDollarsTest()
@@ -52,8 +52,25 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("ZERO DOLLARS AND NINETY-EIGHT CENTS", resultForm.Output);
+            Assert.AreEqual("Zero Dollars and Ninety-Eight Cents", resultForm.Output);
         }
+
+        // Add test for "One dollar" and "One cent"
+        [TestMethod()]
+        public void OneDollarAndOneCentTest()
+        {
+            // Arrange
+            var loggerMock = new Mock<ILogger<NumToWordsConverter>>();
+            Form form = new Form { Input = "1.01" };
+            NumToWordsConverter converter = new NumToWordsConverter(loggerMock.Object);
+
+            // Act
+            Form resultForm = converter.ConvertNumToWords(form);
+
+            // Assert
+            Assert.AreEqual("One Dollar and One Cent", resultForm.Output);
+        }
+
         [TestMethod()]
         public void MaxPositiveNumTest()
         {
@@ -66,7 +83,7 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("NINE HUNDRED AND NINETY-NINE MILLION NINE HUNDRED AND NINETY-NINE THOUSAND NINE HUNDRED AND NINETY-NINE DOLLARS AND NINETY-NINE CENTS", resultForm.Output);
+            Assert.AreEqual("Nine Hundred and Ninety-Nine Million Nine Hundred and Ninety-Nine Thousand Nine Hundred and Ninety-Nine Dollars and Ninety-Nine Cents", resultForm.Output);
         }
 
         [TestMethod()]
@@ -81,7 +98,7 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("ZERO DOLLARS AND ZERO CENTS", resultForm.Output);
+            Assert.AreEqual("Zero Dollars and Zero Cents", resultForm.Output);
         }
         [TestMethod()]
         public void SingleValuePositiveNumTest()
@@ -95,7 +112,7 @@ namespace NumToWordsCurrency.Services.Tests
             Form resultForm = converter.ConvertNumToWords(form);
 
             // Assert
-            Assert.AreEqual("ONE HUNDRED DOLLARS AND ZERO CENTS", resultForm.Output);
+            Assert.AreEqual("One Hundred Dollars and Zero Cents", resultForm.Output);
         }
 
         [TestMethod()]
